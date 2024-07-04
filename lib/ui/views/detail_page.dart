@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/data/entity/movies.dart';
 
+// ignore: must_be_immutable
 class DetailPage extends StatefulWidget {
   Movies movie;
 
-  DetailPage({required this.movie});
+  DetailPage({super.key, required this.movie});
 
   @override
   State<DetailPage> createState() => _State();

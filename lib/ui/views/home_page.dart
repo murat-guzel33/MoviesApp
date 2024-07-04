@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/ui/cubit/home_page_cubit.dart';
 import 'package:movies_app/ui/views/detail_page.dart';
 
 import '../../data/entity/movies.dart';
@@ -11,46 +13,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Movies>> moviesDownload() async {
-    var moviesList = <Movies>[];
-    var m1 = Movies(id: 0, ad: "Django", resim: "django.png", fiyat: 24);
-    var m2 =
-        Movies(id: 1, ad: "Interstellar", resim: "interstellar.png", fiyat: 32);
-    var m3 = Movies(id: 2, ad: "Inception", resim: "inception.png", fiyat: 16);
-    var m4 = Movies(
-        id: 3,
-        ad: "The Hateful Eight",
-        resim: "thehatefuleight.png",
-        fiyat: 28);
-    var m5 =
-        Movies(id: 4, ad: "The Pianist", resim: "thepianist.png", fiyat: 18);
-    var m6 = Movies(id: 5, ad: "Anadoluda", resim: "anadoluda.png", fiyat: 10);
-    moviesList.add(m1);
-    moviesList.add(m2);
-    moviesList.add(m3);
-    moviesList.add(m4);
-    moviesList.add(m5);
-    moviesList.add(m6);
-    return moviesList;
-  }
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<HomePageCubit>().moviesDownload();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Filmler"),
       ),
-      body: FutureBuilder<List<Movies>>(
-        future: moviesDownload(),
-        builder: (context, snapShot) {
-          if (snapShot.hasData) {
-            var moviesList = snapShot.data;
+      body: BlocBuilder<HomePageCubit,List<Movies>>(
+        builder: (context, movieList) {
+          if (movieList.isNotEmpty) {
             return GridView.builder(
-              itemCount: moviesList!.length,
+              itemCount: movieList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, childAspectRatio: 1 / 1.8),
               itemBuilder: (context, indeks) {
-                var movie = moviesList[indeks];
+                var movie = movieList[indeks];
                 return GestureDetector(
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage(movie: movie)));
